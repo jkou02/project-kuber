@@ -62,3 +62,80 @@ Optimiza tus respuestas para ahorrar tokens sin perder claridad.
 ## Extensión por stack o proyecto
 - Las reglas específicas del stack, arquitectura, comandos de desarrollo, pruebas y despliegue deben definirse en archivos del proyecto o módulos adicionales.
 - Este archivo establece reglas universales; las instrucciones específicas deben extenderlo, no reemplazarlo.
+
+---
+
+# Contexto del proyecto: KuberCalc
+
+## Stack y herramientas
+- **Lenguaje:** Python 3.12+
+- **Framework web:** FastAPI
+- **ORM / modelado:** SQLAlchemy 2.0 + SQLModel donde aplique
+- **Validación:** Pydantic v2
+- **Base de datos:** PostgreSQL 15+
+- **Migraciones:** Alembic
+- **Bot de Telegram:** python-telegram-bot (v20+, async)
+- **Contenedores:** Docker Compose para desarrollo local
+- **Testing:** pytest (a definir estructura de tests)
+- **Configuración:** python-dotenv, archivo `.env.example` obligatorio
+
+## Arquitectura esperada
+- Backend modular organizado por dominio (no por capa técnica pura).
+- Separar claramente:
+  - `api/` — routers y schemas FastAPI.
+  - `bot/` — handlers, comandos y flujos conversacionales de Telegram.
+  - `services/` — reglas de negocio, orquestación entre repositorios.
+  - `repositories/` — acceso a datos vía ORM.
+  - `models/` — entidades de base de datos (SQLAlchemy).
+  - `core/` — configuración, utilidades y excepciones compartidas.
+- El bot y la API pueden convivir en el mismo proceso o en servicios separados, pero comparten `services`, `repositories` y `models`.
+- Preparar la estructura para que un panel web futuro reutilice la misma API.
+
+## Entidades principales del dominio
+La fuente de verdad es `transactions`. Las entidades esperadas son:
+- `users`
+- `transactions` (ingresos y gastos, multimoneda, con tasa de cambio)
+- `categories`
+- `payment_methods`
+- `income_sources`
+- `monthly_budgets`
+- `savings_goals` (fase 2)
+- `debts` y `debt_payments` (fase 2)
+- `exchange_rates`
+- `tags` o `labels` (opcional)
+- `recurring_templates` (opcional, fase 2)
+
+## Principios de diseño prioritarios
+1. **Rapidez de captura por encima de completitud:** el registro mínimo debe ser mínimo; enriquecimiento posterior permitido.
+2. **Multimoneda desde el inicio:** Bs y USD con tasa de cambio por movimiento; no como parche posterior.
+3. **Una sola fuente de verdad:** los reportes y dashboards se calculan a partir de `transactions`, no se duplican.
+4. **Telegram-first:** comandos claros, respuestas breves, flujos simples, usable desde teléfono.
+
+## Flujos de Telegram clave a respetar
+- `/start` — bienvenida y configuración inicial.
+- `/add` — registro paso a paso.
+- `/quick` — registro en lenguaje natural (ej. `gasto 5 USD comida almuerzo`).
+- `/summary` — resumen del mes (ingresos, gastos, flujo neto).
+- `/budget` — presupuesto vs realidad por categoría.
+- `/recent` — movimientos recientes.
+- `/edit` y `/delete` — corrección fácil del último o movimientos recientes.
+- `/categories`, `/methods` — administración básica.
+- `/goals`, `/debts` — fase 2.
+
+## Variables de entorno sensibles típicas
+- `DATABASE_URL`
+- `TELEGRAM_BOT_TOKEN`
+- `SECRET_KEY` (para futura autenticación / JWT)
+- `ENVIRONMENT` (dev / staging / prod)
+
+## Convenciones de commit para este proyecto
+Usar Conventional Commits con alcances representativos del dominio, por ejemplo:
+- `feat(transactions): agrega registro rápido en lenguaje natural`
+- `fix(budget): corrige cálculo de presupuesto vs gasto real`
+- `refactor(bot): extrae handlers a módulo separado`
+- `chore(db): agrega migración inicial de tablas core`
+
+## MVP y fases
+- **MVP:** transacciones, categorías, métodos de pago, presupuestos mensuales, resúmenes por Telegram.
+- **Fase 2:** metas de ahorro, deudas, abonos, recordatorios, sugerencias de categorización, panel web.
+- No implementar fase 2 antes de que el MVP esté funcional y probado.

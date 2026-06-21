@@ -216,3 +216,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Private data / spreadsheets
+*.xlsx
+*.xls
+*.csv
+Manejo-de-presupuesto-2025.xlsx
