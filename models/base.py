@@ -1,9 +1,8 @@
 """Base declarativa y mixins para modelos SQLAlchemy."""
 
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Annotated
 
-from sqlalchemy import func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -17,13 +16,13 @@ class Base(DeclarativeBase):
 int_pk = Annotated[int, mapped_column(primary_key=True)]
 created_at = Annotated[
     datetime,
-    mapped_column(default=lambda: datetime.now(timezone.utc)),
+    mapped_column(default=datetime.utcnow),
 ]
 updated_at = Annotated[
     datetime,
     mapped_column(
-        default=lambda: datetime.now(timezone.utc),
-        onupdate=lambda: datetime.now(timezone.utc),
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow,
     ),
 ]
 
