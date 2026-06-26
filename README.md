@@ -51,7 +51,7 @@ KuberCalc es una aplicación backend pensada para reemplazar hojas de cálculo m
    ```bash
    docker compose up --build
    ```
-   Esto inicia PostgreSQL, la API (puerto `8000`) y el bot.
+   Esto inicia PostgreSQL, la API (puerto `8001`) y el bot.
 
 5. Ejecutar migraciones de base de datos:
    ```bash
