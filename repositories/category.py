@@ -21,6 +21,14 @@ class CategoryRepository(Repository[Category]):
         )
         return result.scalar_one_or_none()
 
+    async def get_by_user(self, user_id: int) -> list[Category]:
+        result = await self.session.execute(
+            select(Category)
+            .where(Category.user_id == user_id)
+            .order_by(Category.name)
+        )
+        return list(result.scalars().all())
+
     async def get_defaults(self) -> list[Category]:
         result = await self.session.execute(
             select(Category).where(Category.is_default.is_(True))

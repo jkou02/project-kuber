@@ -25,6 +25,7 @@ from bot.handlers.add import (
     currency_handler,
     description_handler,
 )
+from bot.handlers.categories import categories_handler
 from bot.handlers.quick import quick_handler
 from bot.handlers.start import start_handler
 from bot.handlers.summary import summary_handler
@@ -47,6 +48,7 @@ def main() -> None:
     application.add_handler(CommandHandler("start", start_handler))
     application.add_handler(CommandHandler("quick", quick_handler))
     application.add_handler(CommandHandler("summary", summary_handler))
+    application.add_handler(CommandHandler("categories", categories_handler))
 
     add_conv = ConversationHandler(
         entry_points=[CommandHandler("add", add_handler)],

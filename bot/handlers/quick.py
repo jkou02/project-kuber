@@ -76,4 +76,17 @@ async def quick_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                 f"{label} registrado: {tx.amount} {tx.currency} en {tx.category.name}"
             )
         except Exception as exc:
-            await update.message.reply_text(f"Error: {exc}")
+            error_msg = str(exc)
+            if "Categoría" in error_msg and "no encontrada" in error_msg:
+                # Listar categorías disponibles
+                from repositories.category import CategoryRepository
+                cat_repo = CategoryRepository(session)
+                cats = await cat_repo.get_by_user(user.id)
+                cat_names = ", ".join([c.name for c in cats]) if cats else "Ninguna"
+                await update.message.reply_text(
+                    f"❌ {error_msg}\n\n"
+                    f"Tus categorías disponibles son:\n{cat_names}\n\n"
+                    f"Usa /categories para verlas todas."
+                )
+            else:
+                await update.message.reply_text(f"Error: {exc}")
