@@ -11,9 +11,14 @@ DEFAULT_CATEGORIES: list[tuple[str, CategoryType]] = [
     ("Comida", CategoryType.EXPENSE),
     ("Transporte", CategoryType.EXPENSE),
     ("Salud", CategoryType.EXPENSE),
+    ("Medicina", CategoryType.EXPENSE),
     ("Entretenimiento", CategoryType.EXPENSE),
+    ("Casa", CategoryType.EXPENSE),
+    ("Educación", CategoryType.EXPENSE),
+    ("Ropa", CategoryType.EXPENSE),
     ("Salario", CategoryType.INCOME),
     ("Freelance", CategoryType.INCOME),
+    ("Inversiones", CategoryType.INCOME),
 ]
 
 DEFAULT_PAYMENT_METHODS: list[tuple[str, PaymentMethodType, str]] = [
