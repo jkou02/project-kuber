@@ -8,12 +8,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Instalar dependencias de Python
-COPY pyproject.toml .
-RUN pip install --no-cache-dir -e ".[dev]"
-
-# Copiar código fuente
+# Copiar código fuente y configuración
 COPY . .
+
+# Instalar dependencias y paquete en modo editable
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -e ".[dev]"
 
 ENV PYTHONPATH=/app
 ENV PYTHONDONTWRITEBYTECODE=1
